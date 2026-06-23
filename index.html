@@ -20,7 +20,7 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 50px 40px 40px 40px;
+            padding: 40px;
             overflow: hidden;
             position: relative;
         }
@@ -32,10 +32,10 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-height: 45%;
+            max-height: 40%;
         }
         .logo-container img {
-            max-height: 320px;
+            max-height: 300px;
             width: auto;
             object-fit: contain;
         }
@@ -68,40 +68,48 @@
             transform: translateY(0);
         }
 
-        /* Barra Inferior (Dirección centrada) */
+        /* Barra Inferior */
         .footer {
             width: 100%;
             border-top: 3px solid #000000;
-            padding-top: 25px;
+            padding-top: 20px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between; /* Espacia la dirección y el video */
             align-items: center;
-            position: relative;
+            height: 190px; /* Espacio fijo para contener el reproductor */
         }
         .address {
             font-size: 2.5rem;
             font-weight: bold;
             color: #000000;
-            text-align: center;
+            flex: 1;
+            text-align: left; /* Alineado a la izquierda para balancear con el video */
+            padding-left: 20px;
         }
         
-        /* El reproductor se genera de forma invisible */
+        /* Contenedor del Reproductor de YouTube Visible */
+        .video-container {
+            width: 300px;
+            height: 170px;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
         #player {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
 
-    <div id="player"></div>
-
+    <!-- 1. LOGO -->
     <div class="logo-container">
         <img src="logobgpo.jpeg" alt="Logo Estudio Jurídico">
     </div>
 
+    <!-- 2. ROTADOR DE ESPECIALIDADES -->
     <div class="content-slider">
         <div class="specialty active">Familia</div>
         <div class="specialty">Amparos de Salud</div>
@@ -109,8 +117,14 @@
         <div class="specialty">Laboral</div>
     </div>
 
+    <!-- 3. BARRA INFERIOR CON VIDEO INTEGRADO -->
     <div class="footer">
         <div class="address">27 de Abril 627 - Oficina A</div>
+        
+        <!-- El reproductor oficial ahora es visible abajo a la derecha -->
+        <div class="video-container">
+            <div id="player"></div>
+        </div>
     </div>
 
     <script>
@@ -125,7 +139,7 @@
         }
         setInterval(rotateSpecialties, 5000);
 
-        // --- LÓGICA DE YOUTUBE API EN PRODUCCIÓN ---
+        // --- LÓGICA DE YOUTUBE API ---
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -134,17 +148,12 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '1',
-                width: '1',
-                videoId: 'Bk471uQ26-4',
+                videoId: 'Bk471uQ26-4', // Cadena 3 En Vivo
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 0,
-                    'disablekb': 1,
-                    'fs': 0,
+                    'controls': 1,       // Muestra controles por si querés pausar o ajustar volumen
                     'modestbranding': 1,
-                    'rel': 0,
-                    'showinfo': 0
+                    'rel': 0
                 },
                 events: {
                     'onReady': onPlayerReady
@@ -153,10 +162,11 @@
         }
 
         function onPlayerReady(event) {
-            // Intenta reproducir solo automáticamente al cargar
+            // Intenta reproducir automáticamente
             event.target.playVideo();
             
-            // "Plan B" por si el navegador exige interacción: Un clic en el fondo blanco activa el audio
+            // "Plan B" obligatorio de Chrome/Chromecast: Al hacer UN CLIC en cualquier 
+            // parte blanca del fondo de la pantalla, el audio se activa inmediatamente.
             document.body.addEventListener('click', function() {
                 if (player && typeof player.playVideo === 'function') {
                     player.playVideo();
