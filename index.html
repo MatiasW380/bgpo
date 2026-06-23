@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala de Espera - Estudio Jurídico</title>
+    <style>
+        /* Estilos Generales para Pantalla de TV */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 40px 40px 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Contenedor del Logo */
+        .logo-container {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-height: 45%;
+        }
+        .logo-container img {
+            max-height: 320px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Contenedor Principal de Especialidades */
+        .content-slider {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+        .specialty {
+            font-size: 5.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            position: absolute;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            color: #000000;
+            width: 100%;
+        }
+        
+        .specialty.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Barra Inferior (Dirección centrada) */
+        .footer {
+            width: 100%;
+            border-top: 3px solid #000000;
+            padding-top: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .address {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #000000;
+            text-align: center;
+        }
+        
+        /* El reproductor se genera de forma invisible */
+        #player {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="player"></div>
+
+    <div class="logo-container">
+        <img src="logobgpo.jpeg" alt="Logo Estudio Jurídico">
+    </div>
+
+    <div class="content-slider">
+        <div class="specialty active">Familia</div>
+        <div class="specialty">Amparos de Salud</div>
+        <div class="specialty">Civil</div>
+        <div class="specialty">Laboral</div>
+    </div>
+
+    <div class="footer">
+        <div class="address">27 de Abril 627 - Oficina A</div>
+    </div>
+
+    <script>
+        // --- LÓGICA DEL ROTADOR ---
+        const specialties = document.querySelectorAll('.specialty');
+        let currentIndex = 0;
+
+        function rotateSpecialties() {
+            specialties[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % specialties.length;
+            specialties[currentIndex].classList.add('active');
+        }
+        setInterval(rotateSpecialties, 5000);
+
+        // --- LÓGICA DE YOUTUBE API EN PRODUCCIÓN ---
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '1',
+                width: '1',
+                videoId: 'Bk471uQ26-4',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'fs': 0,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'showinfo': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Intenta reproducir solo automáticamente al cargar
+            event.target.playVideo();
+            
+            // "Plan B" por si el navegador exige interacción: Un clic en el fondo blanco activa el audio
+            document.body.addEventListener('click', function() {
+                if (player && typeof player.playVideo === 'function') {
+                    player.playVideo();
+                }
+            }, { once: true });
+        }
+    </script>
+</body>
+</html>
