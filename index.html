@@ -123,15 +123,6 @@
             margin: 40px 0;
         }
 
-        .section-label {
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: #888888;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-
         .specialty-wrapper {
             position: relative;
             width: 100%;
@@ -143,7 +134,7 @@
 
         .specialty {
             font-family: 'Playfair Display', serif; /* Aporta toque jurídico/elegante */
-            font-size: 5rem;
+            font-size: 5.5rem;
             font-weight: 600;
             letter-spacing: 1px;
             text-align: center;
@@ -245,7 +236,7 @@
 
             <!-- Widget Reloj y Fecha -->
             <div class="time-box">
-                <div id="clock" class="clock">00:00:00</div>
+                <div id="clock" class="clock">00:00</div>
                 <div id="date" class="date">Cargando fecha...</div>
             </div>
         </div>
@@ -253,7 +244,6 @@
 
     <!-- 2. ROTADOR DE ESPECIALIDADES -->
     <div class="content-slider">
-        <div class="section-label"> </div>
         <div class="specialty-wrapper">
             <div class="specialty active">Familia</div>
             <div class="specialty">Amparos de Salud</div>
@@ -276,15 +266,14 @@
     </div>
 
     <script>
-        // --- 1. LÓGICA DEL RELOJ Y FECHA ---
+        // --- 1. LÓGICA DEL RELOJ Y FECHA (HH:MM) ---
         function updateClock() {
             const now = new Date();
             
-            // Hora en formato HH:MM:SS
+            // Hora en formato HH:MM (sin segundero)
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('clock').textContent = `${hours}:${minutes}`;
 
             // Fecha en español
             const options = { weekday: 'long', day: 'numeric', month: 'long' };
@@ -295,46 +284,24 @@
         updateClock();
 
 
-        // --- 2. LÓGICA DEL CLIMA EN CÓRDOBA (vía Open-Meteo, API 100% Gratuita) ---
+        // --- 2. LÓGICA DEL CLIMA EN CÓRDOBA (Open-Meteo API) ---
         const EMOJI_MAP = {
-            0: '☀️',  // Cielo despejado
-            1: '🌤️',  // Principalmente despejado
-            2: '⛅',  // Parcialmente nublado
-            3: '☁️',  // Nublado
-            45: '🌫️', // Niebla
-            48: '🌫️', // Niebla con escarcha
-            51: '🌧️', // Llovizna ligera
-            53: '🌧️', // Llovizna moderada
-            55: '🌧️', // Llovizna densa
-            61: '🌧️', // Lluvia leve
-            63: '🌧️', // Lluvia moderada
-            65: '🌧️', // Lluvia fuerte
-            80: '🌦️', // Chubascos
-            95: '⛈️', // Tormenta eléctrica
-            96: '⛈️'  // Tormenta con granizo
+            0: '☀️',  1: '🌤️',  2: '⛅',  3: '☁️',
+            45: '🌫️', 48: '🌫️', 51: '🌧️', 53: '🌧️',
+            55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
+            80: '🌦️', 95: '⛈️', 96: '⛈️'
         };
 
         const DESC_MAP = {
-            0: 'Despejado',
-            1: 'Algo nublado',
-            2: 'Parcialmente nublado',
-            3: 'Nublado',
-            45: 'Niebla',
-            48: 'Niebla',
-            51: 'Llovizna',
-            53: 'Llovizna',
-            55: 'Llovizna fuerte',
-            61: 'Lluvia ligera',
-            63: 'Lluvia',
-            65: 'Lluvia fuerte',
-            80: 'Chubascos',
-            95: 'Tormenta eléctrica',
-            96: 'Tormenta con granizo'
+            0: 'Despejado', 1: 'Algo nublado', 2: 'Parcialmente nublado',
+            3: 'Nublado', 45: 'Niebla', 48: 'Niebla', 51: 'Llovizna',
+            53: 'Llovizna', 55: 'Llovizna fuerte', 61: 'Lluvia ligera',
+            63: 'Lluvia', 65: 'Lluvia fuerte', 80: 'Chubascos',
+            95: 'Tormenta eléctrica', 96: 'Tormenta con granizo'
         };
 
         async function fetchWeather() {
             try {
-                // Coordenadas de Córdoba, Argentina (-31.4135, -64.1810)
                 const url = 'https://api.open-meteo.com/v1/forecast?latitude=-31.4135&longitude=-64.1810&current_weather=true';
                 const response = await fetch(url);
                 const data = await response.json();
@@ -352,7 +319,6 @@
             }
         }
         fetchWeather();
-        // Actualiza el clima cada 15 minutos
         setInterval(fetchWeather, 15 * 60 * 1000);
 
 
@@ -361,7 +327,6 @@
         const dotsContainer = document.getElementById('dots-container');
         let currentIndex = 0;
 
-        // Crear los puntos indicadores
         specialties.forEach((_, index) => {
             const dot = document.createElement('div');
             dot.classList.add('dot');
