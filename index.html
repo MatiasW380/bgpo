@@ -7,7 +7,7 @@
     <!-- Fuentes elegantes desde Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
         /* === RESET & CONFIGURACIÓN BASE === */
@@ -19,13 +19,14 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #f8f9fa; /* Blanco cálido institucional */
+            /* Fondo con degradado radial sutil */
+            background: radial-gradient(circle at center, #ffffff 0%, #f1f3f5 100%);
             color: #1a1a1a;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 30px 50px;
+            padding: 40px 60px;
             overflow: hidden;
             position: relative;
         }
@@ -36,8 +37,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .logo-container {
@@ -47,47 +48,52 @@
         }
 
         .logo-container img {
-            max-height: 260px; /* Logo grande y bien visible */
+            max-height: 260px;
             width: auto;
             object-fit: contain;
+            filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
         }
 
-        /* Bloque Clima y Reloj */
+        /* Bloque Clima y Reloj con efecto Glassmorphism */
         .widget-info {
             display: flex;
             align-items: center;
             gap: 35px;
-            background: #ffffff;
-            padding: 16px 32px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid #eaeaea;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 16px 36px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
         .weather-box {
             display: flex;
             align-items: center;
-            gap: 12px;
-            border-right: 2px solid #eeeeee;
-            padding-right: 25px;
+            gap: 14px;
+            border-right: 2px solid #e9ecef;
+            padding-right: 30px;
         }
 
         .weather-icon {
-            font-size: 3rem;
+            font-size: 3.2rem;
             line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
         .weather-temp {
             font-size: 2.2rem;
             font-weight: 700;
-            color: #1a1a1a;
+            color: #0f172a;
+            line-height: 1.1;
         }
 
         .weather-desc {
-            font-size: 0.9rem;
-            color: #666666;
+            font-size: 0.85rem;
+            color: #64748b;
             text-transform: capitalize;
-            font-weight: 500;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .time-box {
@@ -97,18 +103,18 @@
         }
 
         .clock {
-            font-size: 2.5rem;
+            font-size: 2.6rem;
             font-weight: 700;
             letter-spacing: 1px;
-            color: #1a1a1a;
+            color: #0f172a;
             line-height: 1;
         }
 
         .date {
-            font-size: 0.95rem;
-            color: #666666;
-            font-weight: 500;
-            margin-top: 4px;
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-top: 5px;
             text-transform: capitalize;
         }
 
@@ -127,7 +133,7 @@
         .specialty-wrapper {
             position: relative;
             width: 100%;
-            height: 120px;
+            height: 140px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -135,16 +141,17 @@
 
         .specialty {
             font-family: 'Playfair Display', serif;
-            font-size: 5.5rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-size: 5.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
             text-align: center;
             position: absolute;
             opacity: 0;
-            transform: translateY(25px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(30px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
             color: #0f172a;
             width: 100%;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
         .specialty.active {
@@ -152,31 +159,28 @@
             transform: translateY(0);
         }
 
-        /* Indicador de progreso (puntos) */
-        .dots-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
+        /* Barra de progreso de rotación */
+        .progress-bar-container {
+            width: 200px;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 40px;
         }
 
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #d1d5db;
-            transition: background-color 0.4s ease, transform 0.4s ease;
-        }
-
-        .dot.active {
-            background-color: #1f2937;
-            transform: scale(1.3);
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #0f172a;
+            border-radius: 4px;
         }
 
         /* === 3. BARRA INFERIOR (FOOTER) === */
         .footer {
             width: 100%;
-            border-top: 2px solid #e0e0e0;
-            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding-top: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -185,17 +189,22 @@
         .address-box {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
         .address-icon {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
 
         .address {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 600;
-            color: #1f2937;
+            color: #1e293b;
             letter-spacing: 0.5px;
         }
 
@@ -203,10 +212,10 @@
         .radio-container {
             width: 320px;
             height: 100px;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            border: 1px solid #e5e7eb;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             background: #ffffff;
         }
 
@@ -235,7 +244,7 @@
                 </div>
             </div>
 
-            <!-- Widget Reloj y Fecha (HH:MM) -->
+            <!-- Widget Reloj y Fecha -->
             <div class="time-box">
                 <div id="clock" class="clock">00:00</div>
                 <div id="date" class="date">Cargando fecha...</div>
@@ -251,7 +260,9 @@
             <div class="specialty">Civil</div>
             <div class="specialty">Laboral</div>
         </div>
-        <div class="dots-container" id="dots-container"></div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
     </div>
 
     <!-- 3. FOOTER (DIRECCIÓN + RADIO TUNEIN) -->
@@ -321,31 +332,41 @@
         setInterval(fetchWeather, 15 * 60 * 1000);
 
 
-        // --- 3. LÓGICA DEL ROTADOR CON PUNTOS INDICADORES ---
+        // --- 3. LÓGICA DEL ROTADOR CON BARRA DE PROGRESO ---
         const specialties = document.querySelectorAll('.specialty');
-        const dotsContainer = document.getElementById('dots-container');
+        const progressBar = document.getElementById('progress-bar');
         let currentIndex = 0;
+        const intervalTime = 5000; // 5 segundos
+        let progressInterval;
 
-        specialties.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active');
-            dotsContainer.appendChild(dot);
-        });
-
-        const dots = document.querySelectorAll('.dot');
+        function startProgressBar() {
+            let startTime = Date.now();
+            
+            clearInterval(progressInterval);
+            progressInterval = setInterval(() => {
+                let elapsedTime = Date.now() - startTime;
+                let percentage = (elapsedTime / intervalTime) * 100;
+                
+                if (percentage >= 100) {
+                    progressBar.style.width = '100%';
+                    clearInterval(progressInterval);
+                } else {
+                    progressBar.style.width = percentage + '%';
+                }
+            }, 50);
+        }
 
         function rotateSpecialties() {
             specialties[currentIndex].classList.remove('active');
-            dots[currentIndex].classList.remove('active');
 
             currentIndex = (currentIndex + 1) % specialties.length;
 
             specialties[currentIndex].classList.add('active');
-            dots[currentIndex].classList.add('active');
+            startProgressBar();
         }
 
-        setInterval(rotateSpecialties, 5000);
+        startProgressBar();
+        setInterval(rotateSpecialties, intervalTime);
     </script>
 </body>
 </html>
