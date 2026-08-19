@@ -19,7 +19,6 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            /* Fondo con degradado radial sutil */
             background: radial-gradient(circle at center, #ffffff 0%, #f1f3f5 100%);
             color: #1a1a1a;
             height: 100vh;
@@ -122,7 +121,6 @@
         .content-slider {
             flex: 1;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 100%;
@@ -157,23 +155,6 @@
         .specialty.active {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        /* Barra de progreso de rotación */
-        .progress-bar-container {
-            width: 200px;
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 40px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: #0f172a;
-            border-radius: 4px;
         }
 
         /* === 3. BARRA INFERIOR (FOOTER) === */
@@ -260,9 +241,6 @@
             <div class="specialty">Civil</div>
             <div class="specialty">Laboral</div>
         </div>
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
     </div>
 
     <!-- 3. FOOTER (DIRECCIÓN + RADIO TUNEIN) -->
@@ -332,41 +310,17 @@
         setInterval(fetchWeather, 15 * 60 * 1000);
 
 
-        // --- 3. LÓGICA DEL ROTADOR CON BARRA DE PROGRESO ---
+        // --- 3. LÓGICA DEL ROTADOR DE ESPECIALIDADES ---
         const specialties = document.querySelectorAll('.specialty');
-        const progressBar = document.getElementById('progress-bar');
         let currentIndex = 0;
-        const intervalTime = 5000; // 5 segundos
-        let progressInterval;
-
-        function startProgressBar() {
-            let startTime = Date.now();
-            
-            clearInterval(progressInterval);
-            progressInterval = setInterval(() => {
-                let elapsedTime = Date.now() - startTime;
-                let percentage = (elapsedTime / intervalTime) * 100;
-                
-                if (percentage >= 100) {
-                    progressBar.style.width = '100%';
-                    clearInterval(progressInterval);
-                } else {
-                    progressBar.style.width = percentage + '%';
-                }
-            }, 50);
-        }
 
         function rotateSpecialties() {
             specialties[currentIndex].classList.remove('active');
-
             currentIndex = (currentIndex + 1) % specialties.length;
-
             specialties[currentIndex].classList.add('active');
-            startProgressBar();
         }
 
-        startProgressBar();
-        setInterval(rotateSpecialties, intervalTime);
+        setInterval(rotateSpecialties, 5000);
     </script>
 </body>
 </html>
