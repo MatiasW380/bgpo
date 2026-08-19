@@ -25,7 +25,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 40px 60px;
+            padding: 30px 50px;
             overflow: hidden;
             position: relative;
         }
@@ -36,17 +36,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 25px;
+            padding-bottom: 20px;
             border-bottom: 2px solid #e0e0e0;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
+            flex: 1;
         }
 
         .logo-container img {
-            max-height: 110px;
+            max-height: 260px; /* Logo grande y bien visible */
             width: auto;
             object-fit: contain;
         }
@@ -57,7 +58,7 @@
             align-items: center;
             gap: 35px;
             background: #ffffff;
-            padding: 12px 28px;
+            padding: 16px 32px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             border: 1px solid #eaeaea;
@@ -72,18 +73,18 @@
         }
 
         .weather-icon {
-            font-size: 2.8rem;
+            font-size: 3rem;
             line-height: 1;
         }
 
         .weather-temp {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
             color: #1a1a1a;
         }
 
         .weather-desc {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #666666;
             text-transform: capitalize;
             font-weight: 500;
@@ -96,7 +97,7 @@
         }
 
         .clock {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 700;
             letter-spacing: 1px;
             color: #1a1a1a;
@@ -104,7 +105,7 @@
         }
 
         .date {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #666666;
             font-weight: 500;
             margin-top: 4px;
@@ -120,7 +121,7 @@
             align-items: center;
             width: 100%;
             position: relative;
-            margin: 40px 0;
+            margin: 20px 0;
         }
 
         .specialty-wrapper {
@@ -133,7 +134,7 @@
         }
 
         .specialty {
-            font-family: 'Playfair Display', serif; /* Aporta toque jurídico/elegante */
+            font-family: 'Playfair Display', serif;
             font-size: 5.5rem;
             font-weight: 600;
             letter-spacing: 1px;
@@ -175,7 +176,7 @@
         .footer {
             width: 100%;
             border-top: 2px solid #e0e0e0;
-            padding-top: 25px;
+            padding-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -234,7 +235,7 @@
                 </div>
             </div>
 
-            <!-- Widget Reloj y Fecha -->
+            <!-- Widget Reloj y Fecha (HH:MM) -->
             <div class="time-box">
                 <div id="clock" class="clock">00:00</div>
                 <div id="date" class="date">Cargando fecha...</div>
@@ -270,12 +271,10 @@
         function updateClock() {
             const now = new Date();
             
-            // Hora en formato HH:MM (sin segundero)
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('clock').textContent = `${hours}:${minutes}`;
 
-            // Fecha en español
             const options = { weekday: 'long', day: 'numeric', month: 'long' };
             let dateStr = now.toLocaleDateString('es-AR', options);
             document.getElementById('date').textContent = dateStr;
