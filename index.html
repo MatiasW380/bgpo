@@ -4,200 +4,353 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sala de Espera - Estudio Jurídico</title>
-    <!-- Fuentes elegantes desde Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+
     <style>
-        /* === RESET & CONFIGURACIÓN BASE === */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* =========================================================
+           PALETA Y MEDIDAS (todo escala con la pantalla del TV)
+           ========================================================= */
+        :root {
+            --papel:      #f6f2ea;   /* fondo marfil */
+            --papel-claro:#fbf9f4;
+            --tinta:      #14213d;   /* azul marino profundo */
+            --tinta-suave:#4a5568;
+            --gris:       #8a8f98;
+            --oro:        #a8864a;   /* dorado apagado */
+            --oro-claro:  rgba(168, 134, 74, 0.35);
+            --duracion:   6000ms;    /* tiempo de cada especialidad */
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { height: 100%; }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at center, #ffffff 0%, #f1f3f5 100%);
-            color: #1a1a1a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 40px 60px;
+            color: var(--tinta);
+            background:
+                radial-gradient(ellipse at 50% 45%, var(--papel-claro) 0%, var(--papel) 60%, #ece6da 100%);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            padding: 5vh 5.5vw 4.5vh;
             overflow: hidden;
             position: relative;
+            cursor: none;
         }
 
-        /* === 1. BARRA SUPERIOR (HEADER) === */
+        /* Marco fino dorado */
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 2.2vh 1.6vw;
+            border: 1px solid var(--oro-claro);
+            pointer-events: none;
+        }
+
+        /* Marca de agua sutil (párrafo §) */
+        body::after {
+            content: "§";
+            position: absolute;
+            right: 4vw;
+            bottom: -12vh;
+            font-family: 'Playfair Display', serif;
+            font-size: 70vh;
+            line-height: 1;
+            color: var(--tinta);
+            opacity: 0.025;
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           1. HEADER
+           ========================================================= */
         .header {
-            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 25px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            flex: 1;
+            position: relative;
+            z-index: 1;
         }
 
         .logo-container img {
-            max-height: 260px;
+            max-height: 17vh;
+            max-width: 38vw;
             width: auto;
             object-fit: contain;
-            filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
+            /* Hace "desaparecer" el fondo blanco del JPG sobre el marfil */
+            mix-blend-mode: multiply;
         }
 
-        /* Bloque Clima y Reloj con efecto Glassmorphism */
         .widget-info {
             display: flex;
             align-items: center;
-            gap: 35px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 16px 36px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            gap: 3vw;
         }
 
         .weather-box {
             display: flex;
             align-items: center;
-            gap: 14px;
-            border-right: 2px solid #e9ecef;
-            padding-right: 30px;
+            gap: 1.2vw;
         }
 
         .weather-icon {
-            font-size: 3.2rem;
-            line-height: 1;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            width: 6.5vh;
+            height: 6.5vh;
+            color: var(--tinta);
         }
+        .weather-icon svg { width: 100%; height: 100%; display: block; }
 
         .weather-temp {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0f172a;
-            line-height: 1.1;
+            font-size: 5.2vh;
+            font-weight: 300;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
         }
 
         .weather-desc {
-            font-size: 0.85rem;
-            color: #64748b;
-            text-transform: capitalize;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 1.6vh;
+            font-weight: 500;
+            color: var(--gris);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 0.8vh;
         }
 
-        .time-box {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+        .divider {
+            width: 1px;
+            height: 9vh;
+            background: linear-gradient(to bottom, transparent, var(--oro), transparent);
         }
+
+        .time-box { text-align: right; }
 
         .clock {
-            font-size: 2.6rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #0f172a;
-            line-height: 1;
+            font-size: 8vh;
+            font-weight: 300;
+            line-height: 0.95;
+            letter-spacing: 0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .clock .colon {
+            display: inline-block;
+            margin: 0 0.05em;
+            animation: parpadeo 2s ease-in-out infinite;
+            position: relative;
+            top: -0.06em;
+        }
+
+        @keyframes parpadeo {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0.3; }
         }
 
         .date {
-            font-size: 0.9rem;
-            color: #64748b;
-            font-weight: 600;
-            margin-top: 5px;
-            text-transform: capitalize;
+            font-size: 1.7vh;
+            font-weight: 500;
+            color: var(--gris);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-top: 1.2vh;
         }
 
-        /* === 2. ROTADOR DE ESPECIALIDADES === */
+        /* =========================================================
+           2. ROTADOR DE ESPECIALIDADES
+           ========================================================= */
         .content-slider {
-            flex: 1;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 100%;
             position: relative;
-            margin: 20px 0;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1.5vw;
+            font-size: 1.7vh;
+            font-weight: 600;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            color: var(--oro);
+            margin-bottom: 4vh;
+        }
+        .eyebrow::before,
+        .eyebrow::after {
+            content: "";
+            width: 4vw;
+            height: 1px;
+            background: var(--oro);
+            opacity: 0.6;
         }
 
         .specialty-wrapper {
             position: relative;
             width: 100%;
-            height: 140px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 26vh;
         }
 
         .specialty {
-            font-family: 'Playfair Display', serif;
-            font-size: 5.8rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-align: center;
             position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-            color: #0f172a;
-            width: 100%;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transform: translateY(3vh);
+            filter: blur(6px);
+            transition:
+                opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 1.1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .specialty.active {
             opacity: 1;
             transform: translateY(0);
+            filter: blur(0);
         }
 
-        /* === 3. BARRA INFERIOR (FOOTER) === */
+        .specialty.leaving {
+            opacity: 0;
+            transform: translateY(-3vh);
+            filter: blur(6px);
+        }
+
+        .specialty-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            font-size: 12vh;
+            line-height: 1.05;
+            letter-spacing: 0.01em;
+            color: var(--tinta);
+        }
+
+        .specialty-rule {
+            width: 5vw;
+            height: 2px;
+            background: var(--oro);
+            margin: 3vh 0 2.6vh;
+        }
+
+        .specialty-sub {
+            font-size: 2.5vh;
+            font-weight: 400;
+            color: var(--tinta-suave);
+            letter-spacing: 0.06em;
+        }
+
+        /* Indicadores de progreso */
+        .progress {
+            display: flex;
+            gap: 0.8vw;
+            margin-top: 5vh;
+        }
+
+        .progress span {
+            width: 3.2vw;
+            height: 3px;
+            background: rgba(20, 33, 61, 0.12);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress span::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--oro);
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .progress span.done::after { transform: scaleX(1); }
+
+        .progress span.running::after {
+            animation: llenar var(--duracion) linear forwards;
+        }
+
+        @keyframes llenar {
+            from { transform: scaleX(0); }
+            to   { transform: scaleX(1); }
+        }
+
+        /* =========================================================
+           3. FOOTER
+           ========================================================= */
         .footer {
-            width: 100%;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            padding-top: 25px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
         }
 
         .address-box {
             display: flex;
             align-items: center;
-            gap: 14px;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 12px 24px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            gap: 1.2vw;
         }
 
         .address-icon {
-            font-size: 1.6rem;
+            width: 4.2vh;
+            height: 4.2vh;
+            color: var(--oro);
+            flex-shrink: 0;
+        }
+
+        .address-label {
+            font-size: 1.5vh;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gris);
+            margin-bottom: 0.6vh;
         }
 
         .address {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #1e293b;
-            letter-spacing: 0.5px;
+            font-size: 3.2vh;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: var(--tinta);
         }
 
-        /* Reproductor de Radio TuneIn */
+        .radio-box { text-align: right; }
+
+        .radio-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6vw;
+            font-size: 1.5vh;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gris);
+            margin-bottom: 1vh;
+        }
+
+        .live-dot {
+            width: 0.9vh;
+            height: 0.9vh;
+            border-radius: 50%;
+            background: #c0392b;
+            animation: parpadeo 1.6s ease-in-out infinite;
+        }
+
         .radio-container {
             width: 320px;
             height: 100px;
-            border-radius: 14px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            background: #ffffff;
+            background: #fff;
+            border: 1px solid var(--oro-claro);
+            box-shadow: 0 10px 30px rgba(20, 33, 61, 0.08);
         }
 
         .radio-container iframe {
@@ -210,99 +363,132 @@
 <body>
 
     <!-- 1. HEADER (LOGO + CLIMA + HORA) -->
-    <div class="header">
+    <header class="header">
         <div class="logo-container">
             <img src="logobgpo.jpeg" alt="Logo Estudio Jurídico">
         </div>
 
         <div class="widget-info">
-            <!-- Widget del Clima -->
             <div class="weather-box">
-                <span id="weather-icon" class="weather-icon">☀️</span>
+                <div id="weather-icon" class="weather-icon"></div>
                 <div>
-                    <div id="weather-temp" class="weather-temp">--°C</div>
-                    <div id="weather-desc" class="weather-desc">Cargando...</div>
+                    <div id="weather-temp" class="weather-temp">--°</div>
+                    <div id="weather-desc" class="weather-desc">Córdoba</div>
                 </div>
             </div>
 
-            <!-- Widget Reloj y Fecha -->
+            <div class="divider"></div>
+
             <div class="time-box">
-                <div id="clock" class="clock">00:00</div>
-                <div id="date" class="date">Cargando fecha...</div>
+                <div id="clock" class="clock">00<span class="colon">:</span>00</div>
+                <div id="date" class="date">&nbsp;</div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- 2. ROTADOR DE ESPECIALIDADES -->
-    <div class="content-slider">
-        <div class="specialty-wrapper">
-            <div class="specialty active">Familia</div>
-            <div class="specialty">Amparos de Salud</div>
-            <div class="specialty">Civil</div>
-            <div class="specialty">Laboral</div>
+    <!-- 2. ROTADOR DE ESPECIALIDADES
+         Para cambiar textos: editá data-title y data-sub -->
+    <main class="content-slider">
+        <div class="eyebrow">Áreas de práctica</div>
+
+        <div class="specialty-wrapper" id="specialties">
+            <div class="specialty" data-title="Familia"
+                 data-sub="Divorcios · Cuota alimentaria · Régimen de visitas · Violencia familiar"></div>
+            <div class="specialty" data-title="Amparos de Salud"
+                 data-sub="Coberturas · Medicamentos · Tratamientos · Prestaciones"></div>
+            <div class="specialty" data-title="Civil"
+                 data-sub="Contratos · Daños y perjuicios · Reclamos"></div>
+            <div class="specialty" data-title="Laboral"
+                 data-sub="Despidos · Accidentes de trabajo · Indemnizaciones"></div>
         </div>
-    </div>
 
-    <!-- 3. FOOTER (DIRECCIÓN + RADIO TUNEIN) -->
-    <div class="footer">
+        <div class="progress" id="progress"></div>
+    </main>
+
+    <!-- 3. FOOTER (DIRECCIÓN + RADIO) -->
+    <footer class="footer">
         <div class="address-box">
-            <span class="address-icon">📍</span>
-            <div class="address">27 de Abril 627 - Oficina A</div>
+            <svg class="address-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/>
+                <circle cx="12" cy="9.5" r="2.5"/>
+            </svg>
+            <div>
+                <div class="address-label">Nuestro estudio</div>
+                <div class="address">27 de Abril 627 — Oficina A</div>
+            </div>
         </div>
 
-        <div class="radio-container">
-            <iframe src="https://tunein.com/embed/player/s152379/?autoplay=true" scrolling="no" allow="autoplay"></iframe>
+        <div class="radio-box">
+            <div class="radio-label"><span class="live-dot"></span>Radio en vivo</div>
+            <div class="radio-container">
+                <iframe src="https://tunein.com/embed/player/s152379/?autoplay=true" scrolling="no" allow="autoplay"></iframe>
+            </div>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // --- 1. LÓGICA DEL RELOJ Y FECHA (HH:MM) ---
+        // ---------- 1. RELOJ Y FECHA ----------
         function updateClock() {
             const now = new Date();
-            
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').innerHTML = `${hh}<span class="colon">:</span>${mm}`;
 
-            const options = { weekday: 'long', day: 'numeric', month: 'long' };
-            let dateStr = now.toLocaleDateString('es-AR', options);
+            const dateStr = now.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
             document.getElementById('date').textContent = dateStr;
         }
-        setInterval(updateClock, 1000);
         updateClock();
+        // Sincroniza con el cambio de minuto (evita reiniciar la animación cada segundo)
+        setTimeout(() => { updateClock(); setInterval(updateClock, 60000); },
+                   (60 - new Date().getSeconds()) * 1000);
 
 
-        // --- 2. LÓGICA DEL CLIMA EN CÓRDOBA (Open-Meteo API) ---
-        const EMOJI_MAP = {
-            0: '☀️',  1: '🌤️',  2: '⛅',  3: '☁️',
-            45: '🌫️', 48: '🌫️', 51: '🌧️', 53: '🌧️',
-            55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
-            80: '🌦️', 95: '⛈️', 96: '⛈️'
+        // ---------- 2. CLIMA EN CÓRDOBA (Open-Meteo) ----------
+        const S = 'fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"';
+        const GOLD = '#a8864a';
+        const ICONS = {
+            sun: `<svg viewBox="0 0 48 48" ${S}><circle cx="24" cy="24" r="8" stroke="${GOLD}"/><g stroke="${GOLD}">
+                  <path d="M24 6v5M24 37v5M6 24h5M37 24h5M11.3 11.3l3.5 3.5M33.2 33.2l3.5 3.5M11.3 36.7l3.5-3.5M33.2 14.8l3.5-3.5"/></g></svg>`,
+            moon: `<svg viewBox="0 0 48 48" ${S}><path d="M32 30.5A12 12 0 0 1 19.5 14a12 12 0 1 0 12.5 16.5z" stroke="${GOLD}"/></svg>`,
+            partly: `<svg viewBox="0 0 48 48" ${S}><g stroke="${GOLD}"><circle cx="18" cy="17" r="6"/><path d="M18 6v3M7 17h3M10.2 9.2l2.1 2.1M25.8 9.2l-2.1 2.1"/></g>
+                  <path d="M16 38h18a7 7 0 0 0 0-14 9 9 0 0 0-17 3 5.5 5.5 0 0 0-1 11z" fill="#f6f2ea"/></svg>`,
+            cloud: `<svg viewBox="0 0 48 48" ${S}><path d="M14 36h20a8 8 0 0 0 0-16 10 10 0 0 0-19 3 6.5 6.5 0 0 0-1 13z"/></svg>`,
+            fog: `<svg viewBox="0 0 48 48" ${S}><path d="M14 26h20a7 7 0 0 0 0-14 9 9 0 0 0-17 3 5.5 5.5 0 0 0-3 11z"/><path d="M10 32h28M14 38h20"/></svg>`,
+            drizzle: `<svg viewBox="0 0 48 48" ${S}><path d="M14 30h20a8 8 0 0 0 0-16 10 10 0 0 0-19 3 6.5 6.5 0 0 0-1 13z"/><path d="M18 35v2M24 37v2M30 35v2"/></svg>`,
+            rain: `<svg viewBox="0 0 48 48" ${S}><path d="M14 28h20a8 8 0 0 0 0-16 10 10 0 0 0-19 3 6.5 6.5 0 0 0-1 13z"/><path d="M17 33l-2 6M24 33l-2 6M31 33l-2 6"/></svg>`,
+            snow: `<svg viewBox="0 0 48 48" ${S}><path d="M14 28h20a8 8 0 0 0 0-16 10 10 0 0 0-19 3 6.5 6.5 0 0 0-1 13z"/><path d="M17 35h.01M24 38h.01M31 35h.01M20 41h.01M28 41h.01" stroke-width="2.6"/></svg>`,
+            storm: `<svg viewBox="0 0 48 48" ${S}><path d="M14 28h20a8 8 0 0 0 0-16 10 10 0 0 0-19 3 6.5 6.5 0 0 0-1 13z"/><path d="M25 30l-4 6h5l-3 6" stroke="${GOLD}"/></svg>`
         };
 
-        const DESC_MAP = {
-            0: 'Despejado', 1: 'Algo nublado', 2: 'Parcialmente nublado',
-            3: 'Nublado', 45: 'Niebla', 48: 'Niebla', 51: 'Llovizna',
-            53: 'Llovizna', 55: 'Llovizna fuerte', 61: 'Lluvia ligera',
-            63: 'Lluvia', 65: 'Lluvia fuerte', 80: 'Chubascos',
-            95: 'Tormenta eléctrica', 96: 'Tormenta con granizo'
-        };
+        function describe(code, isDay) {
+            if (code === 0)              return [isDay ? 'sun' : 'moon', 'Despejado'];
+            if (code === 1)              return [isDay ? 'partly' : 'moon', 'Mayormente despejado'];
+            if (code === 2)              return ['partly', 'Parcialmente nublado'];
+            if (code === 3)              return ['cloud', 'Nublado'];
+            if (code === 45 || code === 48) return ['fog', 'Niebla'];
+            if (code >= 51 && code <= 57)   return ['drizzle', 'Llovizna'];
+            if (code >= 61 && code <= 67)   return ['rain', code >= 65 ? 'Lluvia fuerte' : 'Lluvia'];
+            if (code >= 71 && code <= 77)   return ['snow', 'Nieve'];
+            if (code >= 80 && code <= 82)   return ['rain', 'Chubascos'];
+            if (code === 85 || code === 86) return ['snow', 'Nevadas'];
+            if (code >= 95)                 return ['storm', code === 95 ? 'Tormenta' : 'Tormenta con granizo'];
+            return ['cloud', 'Córdoba'];
+        }
 
         async function fetchWeather() {
             try {
-                const url = 'https://api.open-meteo.com/v1/forecast?latitude=-31.4135&longitude=-64.1810&current_weather=true';
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                const temp = Math.round(data.current_weather.temperature);
-                const code = data.current_weather.weathercode;
+                const url = 'https://api.open-meteo.com/v1/forecast?latitude=-31.4135&longitude=-64.1810&current_weather=true&timezone=America%2FArgentina%2FCordoba';
+                const res = await fetch(url);
+                const data = await res.json();
+                const cw = data.current_weather;
+                const [icon, desc] = describe(cw.weathercode, cw.is_day === 1);
 
-                document.getElementById('weather-temp').textContent = `${temp}°C`;
-                document.getElementById('weather-icon').textContent = EMOJI_MAP[code] || '☀️';
-                document.getElementById('weather-desc').textContent = DESC_MAP[code] || 'Córdoba';
-            } catch (error) {
-                console.error('Error al obtener el clima:', error);
-                document.getElementById('weather-temp').textContent = '--°C';
+                document.getElementById('weather-temp').textContent = `${Math.round(cw.temperature)}°`;
+                document.getElementById('weather-icon').innerHTML = ICONS[icon];
+                document.getElementById('weather-desc').textContent = desc;
+            } catch (e) {
+                console.error('Error al obtener el clima:', e);
+                document.getElementById('weather-icon').innerHTML = ICONS.cloud;
                 document.getElementById('weather-desc').textContent = 'Córdoba';
             }
         }
@@ -310,17 +496,48 @@
         setInterval(fetchWeather, 15 * 60 * 1000);
 
 
-        // --- 3. LÓGICA DEL ROTADOR DE ESPECIALIDADES ---
-        const specialties = document.querySelectorAll('.specialty');
-        let currentIndex = 0;
+        // ---------- 3. ROTADOR DE ESPECIALIDADES ----------
+        const DURACION = 6000; // igual a --duracion en el CSS
+        const items = [...document.querySelectorAll('.specialty')];
+        const progress = document.getElementById('progress');
 
-        function rotateSpecialties() {
-            specialties[currentIndex].classList.remove('active');
-            currentIndex = (currentIndex + 1) % specialties.length;
-            specialties[currentIndex].classList.add('active');
+        items.forEach(el => {
+            el.innerHTML = `
+                <div class="specialty-title">${el.dataset.title}</div>
+                <div class="specialty-rule"></div>
+                <div class="specialty-sub">${el.dataset.sub || ''}</div>`;
+            progress.appendChild(document.createElement('span'));
+        });
+        const bars = [...progress.children];
+
+        let current = 0;
+        function show(i) {
+            items.forEach((el, k) => {
+                el.classList.remove('active', 'leaving');
+                if (k === current && k !== i) el.classList.add('leaving');
+            });
+            items[i].classList.add('active');
+
+            bars.forEach((b, k) => {
+                b.classList.remove('running', 'done');
+                if (k < i) b.classList.add('done');
+            });
+            void bars[i].offsetWidth;          // reinicia la animación
+            bars[i].classList.add('running');
+
+            current = i;
         }
 
-        setInterval(rotateSpecialties, 5000);
+        show(0);
+        setInterval(() => show((current + 1) % items.length), DURACION);
+
+
+        // ---------- 4. MANTENIMIENTO (pantalla 24/7) ----------
+        // Recarga la página una vez por día a las 4:00 para que no se cuelgue
+        setInterval(() => {
+            const n = new Date();
+            if (n.getHours() === 4 && n.getMinutes() === 0) location.reload();
+        }, 60000);
     </script>
 </body>
 </html>
