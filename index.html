@@ -33,8 +33,8 @@
             background:
                 radial-gradient(ellipse at 50% 45%, var(--papel-claro) 0%, var(--papel) 60%, #ece6da 100%);
             display: grid;
-            grid-template-rows: auto 1fr auto;
-            padding: 5vh 5.5vw 4.5vh;
+            grid-template-rows: auto 1fr auto auto;
+            padding: 5vh 5.5vw 4vh;
             overflow: hidden;
             position: relative;
             cursor: none;
@@ -47,6 +47,7 @@
             inset: 2.2vh 1.6vw;
             border: 1px solid var(--oro-claro);
             pointer-events: none;
+            z-index: -1;
         }
 
         /* Marca de agua sutil (párrafo §) */
@@ -61,6 +62,7 @@
             color: var(--tinta);
             opacity: 0.025;
             pointer-events: none;
+            z-index: -1;
         }
 
         /* =========================================================
@@ -70,13 +72,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            z-index: 1;
         }
 
         .logo-container img {
-            max-height: 17vh;
-            max-width: 38vw;
+            max-height: 260px;   /* mismo tamaño que tu versión original */
+            max-width: 45vw;
             width: auto;
             object-fit: contain;
             /* Hace "desaparecer" el fondo blanco del JPG sobre el marfil */
@@ -164,34 +164,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .eyebrow {
-            display: flex;
-            align-items: center;
-            gap: 1.5vw;
-            font-size: 1.7vh;
-            font-weight: 600;
-            letter-spacing: 0.45em;
-            text-transform: uppercase;
-            color: var(--oro);
-            margin-bottom: 4vh;
-        }
-        .eyebrow::before,
-        .eyebrow::after {
-            content: "";
-            width: 4vw;
-            height: 1px;
-            background: var(--oro);
-            opacity: 0.6;
         }
 
         .specialty-wrapper {
             position: relative;
             width: 100%;
-            height: 26vh;
+            height: 22vh;
         }
 
         .specialty {
@@ -226,7 +204,7 @@
         .specialty-title {
             font-family: 'Playfair Display', serif;
             font-weight: 500;
-            font-size: 12vh;
+            font-size: 13vh;
             line-height: 1.05;
             letter-spacing: 0.01em;
             color: var(--tinta);
@@ -236,14 +214,7 @@
             width: 5vw;
             height: 2px;
             background: var(--oro);
-            margin: 3vh 0 2.6vh;
-        }
-
-        .specialty-sub {
-            font-size: 2.5vh;
-            font-weight: 400;
-            color: var(--tinta-suave);
-            letter-spacing: 0.06em;
+            margin-top: 3.5vh;
         }
 
         /* Indicadores de progreso */
@@ -288,8 +259,6 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            position: relative;
-            z-index: 1;
         }
 
         .address-box {
@@ -343,20 +312,101 @@
             animation: parpadeo 1.6s ease-in-out infinite;
         }
 
+        /* El reproductor de TuneIn necesita 320x100 para verse bien,
+           así que se dibuja a ese tamaño y se achica con scale.
+           Para agrandarlo o achicarlo, cambiá solo --radio-escala. */
         .radio-container {
-            width: 320px;
-            height: 100px;
-            border-radius: 10px;
+            --radio-escala: 0.6;
+            width: calc(320px * var(--radio-escala));
+            height: calc(100px * var(--radio-escala));
+            border-radius: 8px;
             overflow: hidden;
             background: #fff;
             border: 1px solid var(--oro-claro);
-            box-shadow: 0 10px 30px rgba(20, 33, 61, 0.08);
+            box-shadow: 0 6px 18px rgba(20, 33, 61, 0.06);
         }
 
         .radio-container iframe {
-            width: 100%;
-            height: 100%;
+            width: 320px;
+            height: 100px;
             border: 0;
+            transform: scale(var(--radio-escala));
+            transform-origin: top left;
+        }
+        /* =========================================================
+           4. CINTA DE NOTICIAS
+           ========================================================= */
+        .ticker {
+            display: flex;
+            align-items: stretch;
+            height: 5.2vh;
+            margin-top: 2.6vh;
+            border-top: 1px solid var(--oro-claro);
+            border-bottom: 1px solid var(--oro-claro);
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .ticker.visible { opacity: 1; }
+
+        .ticker-label {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 1.6vw;
+            background: var(--tinta);
+            color: var(--papel);
+            font-size: 1.5vh;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .ticker-window {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            /* se desvanece en los bordes */
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 3vw, #000 calc(100% - 3vw), transparent 100%);
+                    mask-image: linear-gradient(to right, transparent 0, #000 3vw, #000 calc(100% - 3vw), transparent 100%);
+        }
+
+        .ticker-track {
+            display: inline-flex;
+            white-space: nowrap;
+            will-change: transform;
+            animation: deslizar var(--ticker-dur, 120s) linear infinite;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            font-size: 2.3vh;
+            font-weight: 500;
+            color: var(--tinta);
+        }
+
+        .ticker-item .fuente {
+            font-size: 1.4vh;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gris);
+            margin-left: 0.8vw;
+        }
+
+        .ticker-item::after {
+            content: "◆";
+            font-size: 1.1vh;
+            color: var(--oro);
+            margin: 0 2.2vw;
+        }
+
+        @keyframes deslizar {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -387,19 +437,13 @@
     </header>
 
     <!-- 2. ROTADOR DE ESPECIALIDADES
-         Para cambiar textos: editá data-title y data-sub -->
+         Para cambiar o agregar ramas: editá data-title -->
     <main class="content-slider">
-        <div class="eyebrow">Áreas de práctica</div>
-
         <div class="specialty-wrapper" id="specialties">
-            <div class="specialty" data-title="Familia"
-                 data-sub="Divorcios · Cuota alimentaria · Régimen de visitas · Violencia familiar"></div>
-            <div class="specialty" data-title="Amparos de Salud"
-                 data-sub="Coberturas · Medicamentos · Tratamientos · Prestaciones"></div>
-            <div class="specialty" data-title="Civil"
-                 data-sub="Contratos · Daños y perjuicios · Reclamos"></div>
-            <div class="specialty" data-title="Laboral"
-                 data-sub="Despidos · Accidentes de trabajo · Indemnizaciones"></div>
+            <div class="specialty" data-title="Familia"></div>
+            <div class="specialty" data-title="Amparos de Salud"></div>
+            <div class="specialty" data-title="Civil"></div>
+            <div class="specialty" data-title="Laboral"></div>
         </div>
 
         <div class="progress" id="progress"></div>
@@ -425,6 +469,14 @@
             </div>
         </div>
     </footer>
+
+    <!-- 4. CINTA DE NOTICIAS (titulares desde /api/noticias) -->
+    <div class="ticker" id="ticker">
+        <div class="ticker-label">Noticias</div>
+        <div class="ticker-window">
+            <div class="ticker-track" id="ticker-track"></div>
+        </div>
+    </div>
 
     <script>
         // ---------- 1. RELOJ Y FECHA ----------
@@ -504,8 +556,7 @@
         items.forEach(el => {
             el.innerHTML = `
                 <div class="specialty-title">${el.dataset.title}</div>
-                <div class="specialty-rule"></div>
-                <div class="specialty-sub">${el.dataset.sub || ''}</div>`;
+                <div class="specialty-rule"></div>`;
             progress.appendChild(document.createElement('span'));
         });
         const bars = [...progress.children];
@@ -538,6 +589,51 @@
             const n = new Date();
             if (n.getHours() === 4 && n.getMinutes() === 0) location.reload();
         }, 60000);
+
+        // ---------- 5. CINTA DE NOTICIAS ----------
+        const VELOCIDAD = 70;   // píxeles por segundo (más alto = más rápido)
+        const ticker = document.getElementById('ticker');
+        const track  = document.getElementById('ticker-track');
+        let pendientes = null;  // titulares nuevos que esperan el fin de la vuelta
+
+        function escapar(t) {
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        function pintar(titulares) {
+            const html = titulares.map(n =>
+                `<span class="ticker-item">${escapar(n.titulo)}<span class="fuente">${escapar(n.fuente)}</span></span>`
+            ).join('');
+            track.innerHTML = html + html;   // duplicado para que el giro sea continuo
+            const ancho = track.scrollWidth / 2;
+            track.style.setProperty('--ticker-dur', `${Math.max(ancho / VELOCIDAD, 20)}s`);
+            track.style.animation = 'none';
+            void track.offsetWidth;
+            track.style.animation = '';
+            ticker.classList.add('visible');
+        }
+
+        // Cambia los titulares solo cuando termina una vuelta (sin saltos)
+        track.addEventListener('animationiteration', () => {
+            if (pendientes) { pintar(pendientes); pendientes = null; }
+        });
+
+        async function fetchNoticias() {
+            try {
+                const res = await fetch('/api/noticias');
+                const data = await res.json();
+                if (!data.titulares || !data.titulares.length) return;
+                if (!track.children.length) pintar(data.titulares);
+                else pendientes = data.titulares;
+            } catch (e) {
+                console.error('Error al obtener noticias:', e);
+                // si nunca cargó, la cinta queda oculta
+            }
+        }
+        fetchNoticias();
+        setInterval(fetchNoticias, 10 * 60 * 1000);
     </script>
 </body>
 </html>
