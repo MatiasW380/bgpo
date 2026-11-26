@@ -20,7 +20,6 @@
             --gris:       #8a8f98;
             --oro:        #a8864a;   /* dorado apagado */
             --oro-claro:  rgba(168, 134, 74, 0.35);
-            --duracion:   6000ms;    /* tiempo de cada especialidad */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -217,41 +216,6 @@
             margin-top: 3.5vh;
         }
 
-        /* Indicadores de progreso */
-        .progress {
-            display: flex;
-            gap: 0.8vw;
-            margin-top: 5vh;
-        }
-
-        .progress span {
-            width: 3.2vw;
-            height: 3px;
-            background: rgba(20, 33, 61, 0.12);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress span::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: var(--oro);
-            transform: scaleX(0);
-            transform-origin: left;
-        }
-
-        .progress span.done::after { transform: scaleX(1); }
-
-        .progress span.running::after {
-            animation: llenar var(--duracion) linear forwards;
-        }
-
-        @keyframes llenar {
-            from { transform: scaleX(0); }
-            to   { transform: scaleX(1); }
-        }
-
         /* =========================================================
            3. FOOTER
            ========================================================= */
@@ -445,8 +409,6 @@
             <div class="specialty" data-title="Civil"></div>
             <div class="specialty" data-title="Laboral"></div>
         </div>
-
-        <div class="progress" id="progress"></div>
     </main>
 
     <!-- 3. FOOTER (DIRECCIÓN + RADIO) -->
@@ -549,17 +511,14 @@
 
 
         // ---------- 3. ROTADOR DE ESPECIALIDADES ----------
-        const DURACION = 6000; // igual a --duracion en el CSS
+        const DURACION = 6000; // milisegundos que se muestra cada rama
         const items = [...document.querySelectorAll('.specialty')];
-        const progress = document.getElementById('progress');
 
         items.forEach(el => {
             el.innerHTML = `
                 <div class="specialty-title">${el.dataset.title}</div>
                 <div class="specialty-rule"></div>`;
-            progress.appendChild(document.createElement('span'));
         });
-        const bars = [...progress.children];
 
         let current = 0;
         function show(i) {
@@ -568,13 +527,6 @@
                 if (k === current && k !== i) el.classList.add('leaving');
             });
             items[i].classList.add('active');
-
-            bars.forEach((b, k) => {
-                b.classList.remove('running', 'done');
-                if (k < i) b.classList.add('done');
-            });
-            void bars[i].offsetWidth;          // reinicia la animación
-            bars[i].classList.add('running');
 
             current = i;
         }
